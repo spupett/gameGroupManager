@@ -14,4 +14,11 @@ https://www.youtube.com/watch?v=TlB_eWDSMt4
 https://www.geeksforgeeks.org/javascript-tutorial/ 
 (I would avoid w3schools for JS.  They tend to be a bit out-dated.)
 
+MongoDB (https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
+postman for testing: (https://www.getpostman.com/)
+
 Once we get rolling, this README will become more of our documentation.
+
+Need to look for free API/backend hosting
+
+REST API
