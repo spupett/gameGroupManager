@@ -18,3 +18,10 @@ app.get('/api/v1/users/:userName', (req, res) => {
     res.send(data);
    })
 });
+
+app.get('/api/v1/games/:gameId', (req, res) => {
+  const game = bgg.getGame(req.params.gameId);
+  game.then((data) => {
+    res.send(data);
+  })
+})
