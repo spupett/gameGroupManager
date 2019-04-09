@@ -19,14 +19,17 @@
   "homepage": "https://github.com/spupett/gameGroupManager#readme",
   "devDependencies": {
     "chai": "4.2.0",
+    "grunt": "1.0.4",
     "grunt-contrib-watch": "1.1.0",
     "grunt-mocha-test": "0.13.3",
     "mocha": "6.1.2",
     "nodemon": "1.18.10",
     "sinon": "7.3.1",
-    "grunt": "1.0.4"
+    "supertest": "4.0.2"
   },
   "dependencies": {
-    "express": "4.16.4"
+    "axios": "0.18.0",
+    "express": "4.16.4",
+    "xml-js": "1.6.11"
   }
 }
