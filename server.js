@@ -1,27 +1,12 @@
-const express = require('express');
-const app = express();
+
+const http = require('http');
+const app = require('./app');
+
 const port = process.env.PORT || 3000;
 
-const bgg = require('./api/controllers/bggController');
+const server = http.createServer(app);
 
-app.listen(port);
+server.listen(port);
+
 
 console.log(`RESTful API server started on: ${port}...`);
-
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
-app.get('/api/v1/users/:userName', (req, res) => {
-  const user = bgg.getUser(req.params.userName);
-  user.then((data) => { 
-    res.send(data);
-   })
-});
-
-app.get('/api/v1/games/:gameId', (req, res) => {
-  const game = bgg.getGame(req.params.gameId);
-  game.then((data) => {
-    res.send(data);
-  })
-})
