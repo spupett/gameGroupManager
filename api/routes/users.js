@@ -1,21 +1,12 @@
 const express = require('express');
 const router = express.Router();
+
+const userController = require('../controllers/userController');
 const DAL = require('../DAL/dal');
 const User = require('../models/user');
 
-router.get('/', (req, res, next) => {
-  DAL.find(User)
-    .then((results) => {
-      res.status(200).json(results);
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json({ Error: { message: error}})
-    });
-});
-
 router.get('/:userName', (req, res, next) => {
-  DAL.findOne(User, {bggName: req.params.userName})
+  userController.getUser(req.params.userName, DAL.findOne, () => { return 'ws'; })
     .then((result) => {
       res.status(200).json(result);
     })
