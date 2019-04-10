@@ -1,7 +1,12 @@
-const express = require('express');
-const app = express();
+
+const http = require('http');
+const app = require('./app');
+
 const port = process.env.PORT || 3000;
 
-app.listen(port);
+const server = http.createServer(app);
 
-console.log('RESTful API server started on: ' + port);
+server.listen(port);
+
+
+console.log(`RESTful API server started on: ${port}...`);
