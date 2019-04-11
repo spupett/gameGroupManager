@@ -1,10 +1,8 @@
 var expect = require('chai').expect;
 var sinon = require('sinon');
 
-var controller = require('../../api/controllers/userController');
+const controller = require('../../api/controllers/userController');
 
-let dbSpy;
-let wsSpy;
 const serviceFunctions = {
   dbFetch: () => {},
   wsFetch: () => {},
@@ -96,33 +94,71 @@ describe('userController - getting a user', () => {
 describe('userController - adding a user', () => {
   context('given a database', () => {
     context('given user data', () => {
-      context('given that the user doesn\'t exist in the database', () => {
+      const userData = {};
+      context('given complete user data', () => {
         beforeEach(() => {
-          serviceFunctions.dbFetch = ({}, name) => { return Promise.resolve(null); }
+          userData.bggName = 'spuppett'
+          userData.firstName = 'Luke',
+          userData.lastName = 'Starkiller',
+          userData.email = 'dagobah@theforce.com'
         });
-        context('given the user name exits in the web service', () => {
+        context('given that the user doesn\'t exist in the database', () => {
           beforeEach(() => {
-            serviceFunctions.wsFetch = (name) => { 
-              return Promise.resolve({
-                bggName: name,
+            serviceFunctions.dbFetch = ({}, name) => { return Promise.resolve(null); }
+          });
+          context('given the user name exits in the web service', () => {
+            beforeEach(() => {
+              serviceFunctions.wsFetch = (name) => { 
+                return Promise.resolve({
+                  bggName: name,
+                  firstName: 'Luke',
+                  lastName: 'Starkiller',
+                  _id: 'someId'
+                }); 
+              }
+              serviceFunctions.addUser = ({}, data) => {
+                return Promise.resolve({
+                  bggName: 'spuppett',
+                  firstName: 'Luke',
+                  lastName: 'Starkiller',
+                  email: 'dagobah@theforce.com',
+                  _id: 'someId',
+                  found: 'BGG'});
+              }
+            });
+            it('should add the user data to the database', async () => {
+              const addSpy = sinon.spy(serviceFunctions.addUser);
+              await controller.addUser(userData, serviceFunctions.dbFetch, serviceFunctions.wsFetch, addSpy);
+              expect(addSpy.calledOnce).to.be.true;
+            });
+            it('should return the data', async () => {
+              const expected = {
+                bggName: 'spuppett',
                 firstName: 'Luke',
                 lastName: 'Starkiller',
-                _id: 'someId'
-              }); 
-            }
-            serviceFunctions.addUser = ({}, name) => {
+                email: 'dagobah@theforce.com',
+                _id: 'someId',
+                found: 'BGG'
+              }
+              const actual = await controller.addUser(userData, serviceFunctions.dbFetch, serviceFunctions.wsFetch, serviceFunctions.addUser);
+              expect(actual).to.eql(expected);
+            });
+          });
+        });
+        context('given that the user does exist in the database', () => {
+          beforeEach(() => {
+            serviceFunctions.dbFetch= ({}, name) => {
               return Promise.resolve({
                 bggName: 'spuppett',
                 firstName: 'Luke',
                 lastName: 'Starkiller',
-                _id: 'someId',
-                found: 'BGG'});
+                _id: 'someId'});
             }
           });
-          it('should add the user data to the database', async () => {
+          it('should not save the data', async () => {
             const addSpy = sinon.spy(serviceFunctions.addUser);
-            await controller.addUser('spuppett', serviceFunctions.dbFetch, serviceFunctions.wsFetch, addSpy);
-            expect(addSpy.calledOnce).to.be.true;
+            await controller.addUser(userData, serviceFunctions.dbFetch, serviceFunctions.wsFetch, addSpy);
+            expect(addSpy.notCalled).to.be.true;
           });
           it('should return the data', async () => {
             const expected = {
@@ -130,35 +166,25 @@ describe('userController - adding a user', () => {
               firstName: 'Luke',
               lastName: 'Starkiller',
               _id: 'someId',
-              found: 'BGG'
+              found: 'database'
             }
-            const actual = await controller.addUser('spuppett', serviceFunctions.dbFetch, serviceFunctions.wsFetch, serviceFunctions.addUser);
+            const actual = await controller.addUser(userData, serviceFunctions.dbFetch, serviceFunctions.wsFetch, serviceFunctions.addUser);
             expect(actual).to.eql(expected);
           });
         });
       });
-      context('given that the user does exist in the database', () => {
-        beforeEach(() => {
-          serviceFunctions.dbFetch= ({}, name) => {
-            return Promise.resolve({
-              bggName: 'spuppett',
-              firstName: 'Luke',
-              lastName: 'Starkiller',
-              _id: 'someId'});
-          }
-        });
-        it('should return the data', async () => {
-          const expected = {
-            bggName: 'spuppett',
-            firstName: 'Luke',
-            lastName: 'Starkiller',
-            _id: 'someId',
-            found: 'database'
-          }
-          const actual = await controller.addUser('spuppett', serviceFunctions.dbFetch, serviceFunctions.wsFetch, serviceFunctions.addUser);
-          expect(actual).to.eql(expected);
+      context('given incomplete user data', () => {
+        context('given no bgg user name', () => {
+          beforeEach(() => {          
+            userData.firstName = 'Luke',
+            userData.lastName = 'Starkiller',
+            userData.email = 'dagobah@theforce.com'
+          });
+          it('should throw an error', () => {
+            expect(controller.addUser.bind(userData, serviceFunctions.dbFetch, serviceFunctions.wsFetch, serviceFunctions.addUser)).to.throw('No BGG user name given');
+          });
         });
       });
-    });
+    });    
   });
 });

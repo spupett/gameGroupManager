@@ -9,11 +9,9 @@ module.exports = {
       .catch((error) => { throw error; })
   },
 
-  save: (model, additions) => {
-    if(Array.isArray(additions)) {
-      if(additions.indexOf('_id') !== -1) {
-        model._id = new mongoose.Types.ObjectId();
-      }
+  save: (model) => {
+    if(!model.hasOwnProperty('_id')) {
+      model._id = new mongoose.Types.ObjectId();
     }
     return model.save()
       .then((results) => { return results; })

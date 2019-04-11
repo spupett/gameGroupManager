@@ -17,32 +17,14 @@ router.get('/:userName', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  // NEED TO DO THIS ONE!!!!!!!!!!!!
-  // userController.addUser(req.body.bggName, DAL.findOne, bggController.getUser, DAL.save)
-  //   .then((result) => {
-  //     res.status(200).json(result)
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //     res.status(500).json({ Error: { message: error }})
-  //   });
-  // const User = require('../models/user');
-  // const user = new User({
-  //   bggName: req.body.bggName,
-  //   firstName: req.body.firstName,
-  //   lastName: req.body.lastName,
-  //   email: req.body.email
-  // });
-
-  // // Need to add a _id (mongoDB specific)
-  // DAL.save(user, ['_id'])
-  //   .then((result) => {
-  //     res.status(201).json(result);
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //     res.status(500).json({ Error: { message: error }})
-  //   })
+  userController.addUser(req.body, DAL.findOne, bggController.getUser, DAL.save)
+    .then((result) => {
+      res.status(200).json(result)
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({ Error: { message: error }})
+    });
 });
 
 router.put('/:userName', (req, res, next) => {

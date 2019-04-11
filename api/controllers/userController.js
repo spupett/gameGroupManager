@@ -31,14 +31,24 @@ const controller =  {
       .catch((error) => { throw error; });
   },
 
-  addUser: (userName, dbFetch, wsFetch, dbAdd) => {
-    return controller.getUser(userName, dbFetch, wsFetch)
+  addUser: (userData, dbFetch, wsFetch, dbAdd) => {
+    if(!userData.hasOwnProperty('bggName')) {
+      const error = new Error('No BGG user name given');
+      error.status = 400;
+      throw error;
+    }
+    return controller.getUser(userData.bggName, dbFetch, wsFetch)
       .then((results) => {
         if(results.found === 'database') {
-          console.log('db')
           return results;
         } else {
-          return dbAdd(User, userName);
+          const user = new User({
+            bggName: userData.bggName,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            email: userData.email
+          });
+          return dbAdd(user);
         }
       });
   }
