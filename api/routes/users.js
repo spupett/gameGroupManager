@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require('../controllers/userController');
+const bggController = require('../controllers/bggController');
 const DAL = require('../DAL/dal');
-const User = require('../models/user');
 
 router.get('/:userName', (req, res, next) => {
-  userController.getUser(req.params.userName, DAL.findOne, () => { return 'ws'; })
+  userController.getUser(req.params.userName, DAL.findOne, bggController.getUser)
     .then((result) => {
       res.status(200).json(result);
     })
@@ -17,6 +17,7 @@ router.get('/:userName', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+  const User = require('../models/user');
   const user = new User({
     bggName: req.body.bggName,
     firstName: req.body.firstName,
@@ -36,6 +37,7 @@ router.post('/', (req, res, next) => {
 });
 
 router.put('/:userName', (req, res, next) => {
+  const User = require('../models/user');
   DAL.update(User, {bggName: req.params.userName}, req.body)
     .then((result) => {
       res.status(201).json(result);
@@ -47,6 +49,7 @@ router.put('/:userName', (req, res, next) => {
 });
 
 router.delete('/:userName', (req, res, next) => {
+  const User = require('../models/user');
   DAL.delete(User, req.params.userName)
     .then((result) => {
       res.status(201).json(result);

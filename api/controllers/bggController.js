@@ -1,16 +1,26 @@
 const axios = require('axios');
 const convert = require('xml-js');
 
-function getDataFromBGG(url) {
+function makeUserModel(obj) {
+  return {
+    bggName: obj.user._attributes.name,
+    firstName: obj.user.firstname._attributes.value,
+    lastname: obj.user.lastname._attributes.value,
+    email: '',
+    _id: obj.user._attributes.id
+  }
+}
+
+function getDataFromBGG(url, makeModel) {
   return axios.get(url).then((response) => {
-    return convert.xml2json(response.data, { compact: true, spaces: 4 });
+    return makeModel(JSON.parse(convert.xml2json(response.data, { compact: true, spaces: 4 })));
   });
 }
 
 module.exports = {
   getUser: (userName) => {
     const URL = `https://www.boardgamegeek.com/xmlapi2/user?name=${userName}`;
-    return getDataFromBGG(URL);
+    return getDataFromBGG(URL, makeUserModel);
   },
 
   getGame: (gameId) => {

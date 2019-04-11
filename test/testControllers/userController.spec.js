@@ -5,67 +5,86 @@ var controller = require('../../api/controllers/userController');
 
 let dbSpy;
 let wsSpy;
-let dbFetch = () => {};
-let wsFetch = () => {};
+const fetchFunctions = {
+  dbFetch: () => {},
+  wsFetch: () => {}
+}
 
 describe('userController - getting a user', () => {
   context('given a database', () => {
     context('given a user name', () => {
       context('given that the user name does exist in the database', () => {
         beforeEach(() => {
-          dbFetch = ({}, name) => { 
+          fetchFunctions.dbFetch = ({}, name) => { 
             return Promise.resolve(
             {
               bggName: name,
               firstName: 'Luke',
               lastName: 'Starkiller',
-              _id: 'someId'
+              _id: 'someId',
+              found: 'database'
             }); 
           };
-          wsFetch = (name) => { return Promise.resolve({}); }
+          fetchFunctions.wsFetch = (name) => { return Promise.resolve({}); }
         })
         it('should return the data', async () => {
           const expected = {
             bggName: 'spuppett',
             firstName: 'Luke',
             lastName: 'Starkiller',
-            _id: 'someId'
+            _id: 'someId',
+            found: 'database'
           };
-          const actual = await controller.getUser('spuppett', dbFetch, wsFetch);
+          const actual = await controller.getUser('spuppett', fetchFunctions.dbFetch, fetchFunctions.wsFetch);
           expect(actual).to.eql(expected);
         });
       });
       context('given that the user name doesn\'t exist in the database', () => {
-                
+        beforeEach(() => {
+          fetchFunctions.dbFetch = ({}, name) => { return Promise.resolve(null); }
+          fetchFunctions.wsFetch = (name) => { return Promise.resolve(
+            {
+              bggName: name,
+              firstName: 'Luke',
+              lastName: 'Starkiller',
+              _id: 'id',
+              found: 'BGG'
+            }); 
+          }
+        });
         it('should look to BGG to find the user name', async () => {
-          
+          const wsSpy = sinon.spy(fetchFunctions.wsFetch);
+          await controller.getUser('spuppett', fetchFunctions.dbFetch, wsSpy);
+          expect(wsSpy.calledOnce).to.be.true;
         });
         context('given the user name exists at BGG', () => {
-          beforeEach(() => {
-            dbFetch = ({}, name) => { return Promise.resolve(null); }
-            wsFetch = (name) => { return Promise.resolve(
-              {
-                bggName: name,
-                firstName: 'Luke',
-                lastName: 'Starkiller',
-                _id: 'someId'
-              }); 
-            }
-          });
           it('should return the data', async () => {
             const expected = {
               bggName: 'spuppett',
               firstName: 'Luke',
               lastName: 'Starkiller',
-              _id: 'someId'
+              _id: 'id',
+              found: 'BGG'
             };
-            const actual = await controller.getUser('spuppett', dbFetch, wsFetch);
+            const actual = await controller.getUser('spuppett', fetchFunctions.dbFetch, fetchFunctions.wsFetch);
             expect(actual).to.eql(expected);
           });
         });
         context('given the user name does\'t exist at BGG', () => {
+          beforeEach(() => {
+            fetchFunctions.wsFetch = (name) => { return Promise.resolve(
+              {
+                bggName: name,
+                firstName: 'Luke',
+                lastName: 'Starkiller',
+                _id: ''
+              }) 
+            }
+          });
           it('should return an error or something...', async () => {
-
+            const expected = null;
+            const actual = await controller.getUser('spuppett', fetchFunctions.dbFetch, fetchFunctions.wsFetch);
+            expect(actual).to.eql(expected);
           });
         })
       });
