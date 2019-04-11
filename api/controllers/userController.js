@@ -1,7 +1,7 @@
 
 const User = require('../models/user');
 
-module.exports = {
+const controller =  {
   getUser: (userName, dbFetch, wsFetch) => {
 
     return dbFetch(User, userName)
@@ -29,5 +29,19 @@ module.exports = {
         }
       })
       .catch((error) => { throw error; });
+  },
+
+  addUser: (userName, dbFetch, wsFetch, dbAdd) => {
+    return controller.getUser(userName, dbFetch, wsFetch)
+      .then((results) => {
+        if(results.found === 'database') {
+          console.log('db')
+          return results;
+        } else {
+          return dbAdd(User, userName);
+        }
+      });
   }
 }
+
+module.exports = controller;
