@@ -11,6 +11,16 @@ function makeUserModel(obj) {
   }
 }
 
+function makeGameModel(obj) {
+  return gameList = obj.items.item.map((item) => {
+    return {
+      name: item.name._text,
+      thumbnail: item.thumbnail._text,
+      id: item._attributes.objectid
+    }
+  });
+}
+
 function getDataFromBGG(url, makeModel) {
   return axios.get(url).then((response) => {
     return makeModel(JSON.parse(convert.xml2json(response.data, { compact: true, spaces: 4 })));
@@ -26,5 +36,10 @@ module.exports = {
   getGame: (gameId) => {
     const URL = `https://www.boardgamegeek.com/xmlapi2/thing?&id=${gameId}`;
     return getDataFromBGG(URL);
+  },
+
+  getUserGames: (userName) => {
+    const URL = `https://www.boardgamegeek.com/xmlapi2/collection?own=1&username=${userName}`;
+    return getDataFromBGG(URL, makeGameModel);
   }
 }
