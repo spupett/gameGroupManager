@@ -1,21 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const DAL = require('../DAL/dal');
-const User = require('../models/user');
 
-router.get('/', (req, res, next) => {
-  DAL.find(User)
-    .then((results) => {
-      res.status(200).json(results);
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json({ Error: { message: error}})
-    });
-});
+const userController = require('../controllers/userController');
+const bggController = require('../controllers/bggController');
+const DAL = require('../DAL/dal');
 
 router.get('/:userName', (req, res, next) => {
-  DAL.findOne(User, {bggName: req.params.userName})
+  userController.getUser(req.params.userName, DAL.findOne, bggController.getUser)
     .then((result) => {
       res.status(200).json(result);
     })
@@ -26,25 +17,18 @@ router.get('/:userName', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const user = new User({
-    bggName: req.body.bggName,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email
-  });
-
-  // Need to add a _id (mongoDB specific)
-  DAL.save(user, ['_id'])
+  userController.addUser(req.body, DAL.findOne, bggController.getUser, DAL.save)
     .then((result) => {
-      res.status(201).json(result);
+      res.status(200).json(result)
     })
     .catch((error) => {
       console.log(error);
       res.status(500).json({ Error: { message: error }})
-    })
+    });
 });
 
 router.put('/:userName', (req, res, next) => {
+  const User = require('../models/user');
   DAL.update(User, {bggName: req.params.userName}, req.body)
     .then((result) => {
       res.status(201).json(result);
@@ -56,6 +40,7 @@ router.put('/:userName', (req, res, next) => {
 });
 
 router.delete('/:userName', (req, res, next) => {
+  const User = require('../models/user');
   DAL.delete(User, req.params.userName)
     .then((result) => {
       res.status(201).json(result);
