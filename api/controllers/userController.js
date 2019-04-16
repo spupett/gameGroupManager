@@ -51,6 +51,16 @@ const controller =  {
           return dbAdd(user);
         }
       });
+  },
+
+  getUserGames: (userName, dbFetch, wsFetch) => {
+    // getting ahead of myself here, but I want to first check the db, then the ws.
+
+    // but for now, I really just want to get the ws working.
+    return wsFetch(userName)
+      .then((results) => {
+        return results;
+      });
   }
 }
 

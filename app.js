@@ -8,7 +8,7 @@ const gameRoutes = require('./api/routes/games');
 // middleware - log out incoming requests
 app.use(logger('dev'));
 
-// middleware - takes info passed in through the body (possible without bodyParser, but eases it for us.)
+// middleware - takes info passed in through the body
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
@@ -25,12 +25,12 @@ app.use((req, res, next) => {
 
 // middleware - filter all requests for users to the userRoutes
 app.use('/api/v1/users', userRoutes);
-// middleware - filter all requests for users to the userRoutes
+// middleware - filter all requests for games to the gameRoutes
 app.use('/api/v1/games', gameRoutes);
 
 // middleware - catch any requests that aren't caught by previous filters
 app.use((req, res, next) => {
-  const error = new Error('Not route found');
+  const error = new Error('No route found');
   error.status = 404;
   next(error);
 });

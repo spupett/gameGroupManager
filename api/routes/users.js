@@ -16,6 +16,18 @@ router.get('/:userName', (req, res, next) => {
     });
 });
 
+router.get('/:userName\/games', (req, res, next) => {
+  userController.getUserGames(req.params.userName, () => {}, bggController.getUserGames)
+    .then((result) => {
+      console.log('here');
+      res.status(200).json(result);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({ Error: { message: error }})
+    });
+});
+
 router.post('/', (req, res, next) => {
   userController.addUser(req.body, DAL.findOne, bggController.getUser, DAL.save)
     .then((result) => {
