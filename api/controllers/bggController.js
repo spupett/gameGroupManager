@@ -35,7 +35,7 @@ module.exports = {
 
   getGame: (gameId) => {
     const URL = `https://www.boardgamegeek.com/xmlapi2/thing?&id=${gameId}`;
-    return getDataFromBGG(URL);
+    return getDataFromBGG(URL, (obj) => { return obj });
   },
 
   getUserGames: (userName) => {

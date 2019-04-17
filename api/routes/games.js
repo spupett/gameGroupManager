@@ -1,17 +1,18 @@
 const express = require('express');
 const router = express.Router();
 
+const gameController = require('../controllers/gameController');
 const bggController = require('../controllers/bggController');
 
 router.get('/', (req, res, next) => {
-  res.status(200).json({ message: 'good to go games'});
-});
-
-router.get('/:gameId', (req, res, next) => {
-  const user = bggController.getGame(req.params.gameId);
-  user.then((response) => {
-    res.status(200).json({message: 'found', user: JSON.parse(response)});
-  })
+  gameController.getGames(req.body, () => {}, bggController.getGame)
+    .then((results) => {
+      res.status(200).json(results);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({ Error: { message: error }})
+    });
 });
 
 
