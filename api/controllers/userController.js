@@ -1,5 +1,6 @@
 
 const User = require('../models/user');
+const Convert = require('../../util-module').Convert;
 
 const controller =  {
   getUser: (userName, dbFetch, wsFetch) => {

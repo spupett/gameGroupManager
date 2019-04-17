@@ -1,12 +1,25 @@
 const express = require('express');
 const router = express.Router();
+const Convert = require('../../util-module').Convert;
 
 const userController = require('../controllers/userController');
 const bggController = require('../controllers/bggController');
 const DAL = require('../DAL/dal');
 
+const getBggUser = (user) => {
+  return bggController.getUser(user).then((data) => {
+    return Convert.convertUser(data);
+  });
+}
+
+const getUsersGames = (user) => {
+  return bggController.getUserGames(user).then((data) => {
+    return Convert.convertGameListData(data);
+  })
+}
+
 router.get('/:userName', (req, res, next) => {
-  userController.getUser(req.params.userName, DAL.findOne, bggController.getUser)
+  userController.getUser(req.params.userName, DAL.findOne, getBggUser)
     .then((result) => {
       res.status(200).json(result);
     })
@@ -17,9 +30,8 @@ router.get('/:userName', (req, res, next) => {
 });
 
 router.get('/:userName\/games', (req, res, next) => {
-  userController.getUserGames(req.params.userName, () => {}, bggController.getUserGames)
+  userController.getUserGames(req.params.userName, () => {}, getUsersGames)
     .then((result) => {
-      console.log('here');
       res.status(200).json(result);
     })
     .catch((error) => {
@@ -29,7 +41,7 @@ router.get('/:userName\/games', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  userController.addUser(req.body, DAL.findOne, bggController.getUser, DAL.save)
+  userController.addUser(req.body, DAL.findOne, getBggUser, DAL.save)
     .then((result) => {
       res.status(200).json(result)
     })
