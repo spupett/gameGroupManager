@@ -13,7 +13,7 @@ module.exports = {
     return getDataFromBGG(URL);
   },
 
-  getGame: (gameId) => {
+  getGames: (gameId) => {
     const URL = `https://www.boardgamegeek.com/xmlapi2/thing?&id=${gameId}`;
     return getDataFromBGG(URL);
   },

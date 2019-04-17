@@ -9,11 +9,13 @@ const gameSchema = mongoose.Schema({
   playerCount: {
     min: Number,
     max: Number,
-    best: Number
+    best: String
   },
   playTime: Number,
   category: [String],
-  mechanics: [String]
+  mechanics: [String],
+  bggLink: String,
+  description: String // https://www.boardgamegeek.com/boardgame/bggId
 });
 
 module.exports = mongoose.model('Game', gameSchema);

@@ -9,6 +9,12 @@ module.exports = {
       .catch((error) => { throw error; })
   },
 
+  find: (model, search) => {
+    return model.find(search).exec()
+    .then((result) => { return result; })
+    .catch((error) => { throw error; })
+  },
+
   save: (model) => {
     if(!model.hasOwnProperty('_id')) {
       model._id = new mongoose.Types.ObjectId();

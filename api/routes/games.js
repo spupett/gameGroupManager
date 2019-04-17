@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const gameController = require('../controllers/gameController');
-const bggController = require('../controllers/bggController');
+
 
 router.get('/', (req, res, next) => {
-  gameController.getGames(req.body, () => {}, bggController.getGame)
+  gameController.getGames(req.body)
     .then((results) => {
       res.status(200).json(results);
     })
