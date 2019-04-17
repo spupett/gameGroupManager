@@ -1,5 +1,6 @@
 var expect = require('chai').expect;
 var sinon = require('sinon');
+const Convert = require('../../util-module').Convert;
 
 const controller = require('../../api/controllers/userController');
 
@@ -50,6 +51,7 @@ describe('userController - getting a user', () => {
               bggName: name,
               firstName: 'Luke',
               lastName: 'Starkiller',
+              email: '',
               _id: 'id',
               found: 'BGG'
             }); 
@@ -67,6 +69,7 @@ describe('userController - getting a user', () => {
               firstName: 'Luke',
               lastName: 'Starkiller',
               _id: 'id',
+              email: '',
               found: 'BGG'
             };
             const actual = await controller.getUser('spuppett', serviceFunctions.User, serviceFunctions.wsFetchUser);
@@ -75,15 +78,16 @@ describe('userController - getting a user', () => {
         });
         context('and the user name does\'t exist at BGG', () => {
           beforeEach(() => {
-            serviceFunctions.wsFetchUser = (name) => { return Promise.resolve(
-              {
-                bggName: name,
-                firstName: 'Luke',
-                lastName: 'Starkiller',
-                _id: ''
-              }) 
+            serviceFunctions.wsFetchUser = (name) => { return Promise.resolve({
+              bggName: name,
+              firstName: 'Luke',
+              lastName: 'Starkiller',
+              email: '',
+              _id: '',
+              found: 'BGG'
+            });
             }
-          });
+          })
           it('then it should return null', async () => {
             const expected = null;
             const actual = await controller.getUser('spuppett', serviceFunctions.User, serviceFunctions.wsFetchUser);
@@ -111,12 +115,15 @@ describe('userController - adding a user', () => {
         context('and the user name exits in the web service', () => {
           beforeEach(() => {
             serviceFunctions.wsFetchUser = (name) => { 
-              return Promise.resolve({
-                bggName: name,
-                firstName: 'Luke',
-                lastName: 'Starkiller',
-                _id: 'someId'
-              }); 
+              return Promise.resolve(
+                {
+                  bggName: name,
+                  firstName: 'Luke',
+                  lastName: 'Starkiller',
+                  email: '',
+                  _id: 'id',
+                  found: 'BGG'
+                }); 
             }
             serviceFunctions.addUser = ({}, data) => {
               return Promise.resolve({
@@ -198,23 +205,13 @@ describe('userController - getting a user\'s list of games', () => {
         beforeEach(() => {
           userName = 'spuppett';
           serviceFunctions.wsFetchUserGameList = (userName) => {
-            return Promise.resolve([
-              { 
-                name: "1",
-                thumbnail:  'someimage1.png',
-                id: 1337,
-              },
-              { 
-                name: "2",
-                thumbnail:  'someimage2.png',
-                id: 1773,
-              },
-              { 
-                name: "3",
-                thumbnail:  'someimage3.png',
-                id: 7331,
-              }
-            ])
+            return Promise.resolve(
+              [
+                { name: "1", thumbnail: "someimage1.png", id: "1337" },
+                { name: "2", thumbnail: "someimage2.png", id: "1773" },
+                { name: "3", thumbnail: "someimage3.png", id: "7331" },
+              ]             
+              );
           };
         })
         it('then it should return a list of all owned games', async () => {
@@ -222,17 +219,17 @@ describe('userController - getting a user\'s list of games', () => {
             { 
               name: "1",
               thumbnail:  'someimage1.png',
-              id: 1337,
+              id: '1337',
             },
             { 
               name: "2",
               thumbnail:  'someimage2.png',
-              id: 1773,
+              id: '1773',
             },
             { 
               name: "3",
               thumbnail:  'someimage3.png',
-              id: 7331,
+              id: '7331',
             }
           ];
           const actual = await controller.getUserGames('spuppett', serviceFunctions.dbFetchUserGameList, serviceFunctions.wsFetchUserGameList);
