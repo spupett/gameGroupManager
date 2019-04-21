@@ -207,9 +207,9 @@ describe('userController - getting a user\'s list of games', () => {
           serviceFunctions.wsFetchUserGameList = (userName) => {
             return Promise.resolve(
               [
-                { name: "1", thumbnail: "someimage1.png", id: "1337" },
-                { name: "2", thumbnail: "someimage2.png", id: "1773" },
-                { name: "3", thumbnail: "someimage3.png", id: "7331" },
+                { name: '1', thumbnail: 'someimage1.png', id: '1337' },
+                { name: '2', thumbnail: 'someimage2.png', id: '1773' },
+                { name: '3', thumbnail: 'someimage3.png', id: '7331' },
               ]             
               );
           };
@@ -217,17 +217,17 @@ describe('userController - getting a user\'s list of games', () => {
         it('then it should return a list of all owned games', async () => {
           const expected = [
             { 
-              name: "1",
+              name: '1',
               thumbnail:  'someimage1.png',
               id: '1337',
             },
             { 
-              name: "2",
+              name: '2',
               thumbnail:  'someimage2.png',
               id: '1773',
             },
             { 
-              name: "3",
+              name: '3',
               thumbnail:  'someimage3.png',
               id: '7331',
             }
