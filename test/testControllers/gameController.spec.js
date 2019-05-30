@@ -1,5 +1,4 @@
 var expect = require('chai').expect;
-var sinon = require('sinon');
 const rewire = require('rewire');
 
 const dalMock = {
