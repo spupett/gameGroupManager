@@ -15,8 +15,9 @@ const getAllGames = async(gameIds) => {
     if (newGameIds.length > 0) {
         const gamesFromWS = await getGamesFromWS(newGameIds);
         if (gamesFromWS.items.item) {
-            allGames = gamesFromDB.concat(Convert.convertGameDetail(gamesFromWS));
-            saveNewGames(gamesFromWS);
+            newGames = Convert.convertGameDetail(gamesFromWS);
+            allGames = gamesFromDB.concat(newGames);
+            saveNewGames(newGames);
         } else {
             return null;
         }
@@ -35,11 +36,7 @@ const getGamesFromWS = (gameIds) => {
 }
 
 const saveNewGames = async(games) => {
-    if (!Array.isArray(games)) {
-        games = [games];
-    }
-    games.forEach((rawGame) => {
-        game = Convert.convertGameDetail(rawGame)[0];
+    games.forEach((game) => {
         DAL.save(new Game({
             name: game.name,
             bggId: game.bggId,
