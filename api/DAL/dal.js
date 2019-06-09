@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 
+const mongoConnection = `mongodb+srv://admin:${process.env.mongo_pw}@cluster0-fedx8.mongodb.net/test?retryWrites=true`;
+
 module.exports = {
     findOne: (model, userName) => {
-        mongoose.connect(`mongodb+srv://admin:${process.env.mongo_pw}@cluster0-fedx8.mongodb.net/test?retryWrites=true`, { useNewUrlParser: true });
+        mongoose.connect(mongoConnection, { useNewUrlParser: true });
         return model.findOne({ bggName: userName }).exec()
             .then((result) => { return result; })
             .catch((error) => { throw error; })
@@ -11,7 +13,7 @@ module.exports = {
     },
 
     find: (model, search) => {
-        mongoose.connect(`mongodb+srv://admin:${process.env.mongo_pw}@cluster0-fedx8.mongodb.net/test?retryWrites=true`, { useNewUrlParser: true });
+        mongoose.connect(mongoConnection, { useNewUrlParser: true });
         return model.find(search).exec()
             .then((result) => { return result; })
             .catch((error) => { throw error; })
@@ -19,7 +21,7 @@ module.exports = {
     },
 
     save: (model) => {
-        mongoose.connect(`mongodb+srv://admin:${process.env.mongo_pw}@cluster0-fedx8.mongodb.net/test?retryWrites=true`, { useNewUrlParser: true });
+        mongoose.connect(mongoConnection, { useNewUrlParser: true });
         return model.save()
             .then((results) => { return results; })
             .catch((error) => { throw error; })
@@ -27,7 +29,7 @@ module.exports = {
     },
 
     update: (model, where, update) => {
-        mongoose.connect(`mongodb+srv://admin:${process.env.mongo_pw}@cluster0-fedx8.mongodb.net/test?retryWrites=true`, { useNewUrlParser: true });
+        mongoose.connect(mongoConnection, { useNewUrlParser: true });
         return model.update(where, { $set: update })
             .then((result) => { return result; })
             .catch((error) => { throw error; })
@@ -35,7 +37,7 @@ module.exports = {
     },
 
     delete: (model, userName) => {
-        mongoose.connect(`mongodb+srv://admin:${process.env.mongo_pw}@cluster0-fedx8.mongodb.net/test?retryWrites=true`, { useNewUrlParser: true });
+        mongoose.connect(mongoConnection, { useNewUrlParser: true });
         return model.remove({ bggName: userName }).exec()
             .then((results) => { return results; })
             .catch((error) => { throw error; })
