@@ -1,6 +1,15 @@
 const User = require('../models/user');
 
 const controller = {
+    getUsers: (dbFetch) => {
+        return dbFetch(User)
+            .then((dbResults) => {
+                const users = JSON.parse(JSON.stringify(dbResults));
+                return users.map((user) => {
+                    return { "bggName": user.bggName, "firstName": user.firstName, "lastName": user.lastName };
+                });
+            })
+    },
     getUser: (userName, dbFetch, wsFetch) => {
 
         return dbFetch(User, userName)
