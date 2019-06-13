@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const mongoConnection = `mongodb+srv://admin:${process.env.mongo_pw}@cluster0-fedx8.mongodb.net/test?retryWrites=true`;
+const mongoConnection = `mongodb+srv://admin:${process.env.MONGO_PW}@cluster0-fedx8.mongodb.net/test?retryWrites=true`;
 
 module.exports = {
     findOne: (model, userName) => {

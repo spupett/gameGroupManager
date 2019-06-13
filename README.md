@@ -22,3 +22,7 @@ Once we get rolling, this README will become more of our documentation.
 Need to look for free API/backend hosting
 
 REST API
+
+https://stackoverflow.com/a/40411074/267250
+
+heroku config:get MONGO_PW -s >> .env
