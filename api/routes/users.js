@@ -18,6 +18,17 @@ const getUsersGames = (user) => {
     })
 }
 
+router.get('/', (req, res, next) => {
+    userController.getUsers(DAL.find)
+        .then((results) => {
+            res.status(200).json(results);
+        })
+        .catch((error) => {
+            console.log(error);
+            res.status(500).json({ Error: { message: error } })
+        });
+})
+
 router.get('/:userName', (req, res, next) => {
     userController.getUser(req.params.userName, DAL.findOne, getBggUser)
         .then((result) => {
