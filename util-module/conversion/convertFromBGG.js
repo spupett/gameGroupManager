@@ -1,4 +1,8 @@
 function findBestPlayerNumber(poll) {
+  console.log('poll', poll);
+  if(!Array.isArray(poll)) {
+    return '0';
+  }
   const best = poll.map((pc) => {
     return {
       numberPlayers: pc._attributes.numplayers,
