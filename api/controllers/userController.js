@@ -50,6 +50,9 @@ const controller = {
         }
         return controller.getUser(userData.bggName, dbFetch, wsFetch)
             .then((results) => {
+                if (results === null) {
+                    return null;
+                }
                 if (results.found === 'database') {
                     return results;
                 } else {
