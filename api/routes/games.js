@@ -4,8 +4,8 @@ const router = express.Router();
 const gameController = require('../controllers/gameController');
 
 
-router.get('/', (req, res, next) => {
-    gameController.getGames(JSON.parse(req.query.gameIdList))
+router.post('/', (req, res, next) => {
+    gameController.getGames(JSON.parse(req.body.gameList))
         .then((results) => {
             res.status(200).json(results);
         })
