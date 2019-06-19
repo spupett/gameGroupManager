@@ -58,6 +58,7 @@ const controller = {
     },
 
     getGames: async(gameIds) => {
+        if (!Array.isArray(gameIds)) { return getAllGames([gameIds]) }
         return getAllGames(gameIds);
     }
 };
