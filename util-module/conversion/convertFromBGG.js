@@ -46,7 +46,7 @@ module.exports = {
 
     convertGameDetail: (bggGameData) => {
         const convert = (bggData) => {
-            return {
+            const convertedGame = {
                 name: (Array.isArray(bggData.name) ? bggData.name[0]._attributes.value : bggData.name._attributes.value),
                 bggId: bggData._attributes.id,
                 thumbnail: (bggData.thumbnail) ? bggData.thumbnail._text : '',
@@ -72,6 +72,11 @@ module.exports = {
                     return attr._attributes.value;
                 })
             }
+
+            if (convertedGame.mechanics === undefined || convertedGame.mechanics.length === 0) { convertedGame.mechanics.push('None Listed') }
+            if (convertedGame.category === undefined || convertedGame.category.length === 0) { convertedGame.category.push('None Listed') }
+
+            return convertedGame
         }
         if (!Array.isArray(bggGameData.items.item)) {
             return [convert(bggGameData.items.item)];
