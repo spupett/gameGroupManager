@@ -545,7 +545,8 @@ describe('gameController - getting a game', () => {
                                 category: ['fantasy', 'space', 'cowboy'],
                                 mechanics: ['dexterity', 'card drafting'],
                                 description: 'description of an amazing game',
-                                bggLink: 'https://www.boardgamegeek.com/boardgame/1'
+                                bggLink: 'https://www.boardgamegeek.com/boardgame/1',
+                                display: true
                             }];
                             const actual = await controller.getGame(gameId);
                             expect(actual).to.be.eql(expected);
@@ -570,9 +571,8 @@ describe('gameController - getting a game', () => {
                             DAL: dalMock.findOne
                         })
                     })
-                    it('then it should return the game data', async() => {
+                    it('then it should return the game data from the database', async() => {
                         const expected = [{
-                            _id: '5cb937601b0d4355cc32579b',
                             category: ['Dice', 'Fighting', 'Movies / TV / Radio theme', 'Science Fiction'],
                             mechanics: ['Area Control / Area Influence', 'Area Movement', 'Card Drafting', 'Dice Rolling', 'Player Elimination', 'Press Your Luck'],
                             name: 'King of New York',
@@ -586,7 +586,8 @@ describe('gameController - getting a game', () => {
                             },
                             playTime: 40,
                             bggLink: 'https://www.boardgamegeek.com/boardgame/160499',
-                            description: 'There\'s always something happening in the city that never sleeps. Mayb...'
+                            description: 'There\'s always something happening in the city that never sleeps. Mayb...',
+                            display: true
                         }]
                         const actual = await controller.getGame(160499);
                         expect(actual).to.eql(expected);
