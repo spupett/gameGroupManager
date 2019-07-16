@@ -1,5 +1,6 @@
 const Game = require('../models/game');
 const Convert = require('../../util-module').Convert;
+const Mask = require('../../util-module').Mask;
 const bggController = require('../controllers/bggController');
 const DAL = require('../DAL/dal');
 
@@ -24,7 +25,9 @@ const getAllGames = async(gameIds) => {
     } else {
         allGames = gamesFromDB;
     }
-    return allGames
+    return allGames.map((game) => {
+        return Mask.maskGameDetail(game);
+    })
 }
 
 const getGamesFromDB = (gameIds) => {

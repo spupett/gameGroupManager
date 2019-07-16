@@ -70,13 +70,14 @@ module.exports = {
                     return attr._attributes.type === 'boardgamemechanic'
                 }).map((attr) => {
                     return attr._attributes.value;
-                })
+                }), 
+                display: true
             }
 
-            if (convertedGame.mechanics === undefined || convertedGame.mechanics.length === 0) { convertedGame.mechanics.push('None Listed') }
-            if (convertedGame.category === undefined || convertedGame.category.length === 0) { convertedGame.category.push('None Listed') }
+            if (convertedGame.mechanics === undefined) { convertedGame.mechanics = [] }
+            if (convertedGame.category === undefined) { convertedGame.category = [] }
 
-            return convertedGame
+            return convertedGame;
         }
         if (!Array.isArray(bggGameData.items.item)) {
             return [convert(bggGameData.items.item)];
