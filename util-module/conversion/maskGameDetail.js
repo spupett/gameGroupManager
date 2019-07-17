@@ -22,10 +22,11 @@ const objMask = {
 
 module.exports = {
   maskGameDetail: (gameDetails) => {
+    const localDetails = JSON.parse(JSON.stringify(gameDetails));
     const keys = Object.keys(objMask);
     const maskedDetails = keys.reduce((acc, key) => {
-      if(hasProp(gameDetails, key)) {
-        acc[key] = gameDetails[key];
+      if(hasProp(localDetails, key)) {
+        acc[key] = localDetails[key];
       } else {
         acc[key] = objMask[key];
       }
