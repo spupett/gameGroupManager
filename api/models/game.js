@@ -14,7 +14,8 @@ const gameSchema = mongoose.Schema({
     category: [String],
     mechanics: [String],
     bggLink: String,
-    description: String // https://www.boardgamegeek.com/boardgame/bggId
+    description: String,
+    display: Boolean
 });
 
 module.exports = mongoose.model('Game', gameSchema);
